@@ -24,12 +24,14 @@ Projeto simples de Python utilizando o banco de dados (Não relacional), CouchDB
 
 ## bibliotecas
     > requirements.txt
-        
+        CouchDB==1.2
+        dotenv==0.9.9
+        python-dotenv==1.2.1  
 
 ## Particularidades
     
 
-    
+
 ## Clonar este projeto
     
 
