@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 # Importação da biblioteca os (Vairáveis de ambiente do sistema operacional)
 # Importação do módulo urllib.parse
 import urllib.parse
+# Instalando e importando a biblioteca - tabulate - pip install tabulate
+from tabulate import tabulate
 import os
 
 # Carregar variáveis do arquivo .env
@@ -55,5 +57,41 @@ def con():
         except ConnectionRefusedError as g:
             print(f'Falha do servidor. {g}')        
 
+# Funcionalidade - Listando documentos/registros do banco
+def listar ():
+    
+    # Atribui-se a conexão
+    db = con()
+    
+    # Atribuindo uma lista
+    usuarios = []
+    
+    # Criando um loop para contabilizar as linhas do banco (row), utlizndo método - view
+    if db:
+        # Se não houver registros, então...
+        if db.info()['doc_count'] == 0:
+            print('\n>>> Não há usuários registrados <<<')
+        else:    
+            for row in db.view('all_docs', include_docs=True):
+                # Atribui-se ao documento (doc) a lista obtida
+                doc = row['doc']
+                # Atribui-se uma lista para os campos da tabela
+                tab = [
+                    doc.get('_id'),
+                    doc.get('_rev'),
+                    doc.get('_nome'),
+                    doc.get('_idade'),
+                    doc.get('_cidade')
+                ]
+                # Adiciona-se os campos da tabela a lista de usuários
+                usuarios.append(tab)
+                # Cria-se um cabeçalho da tabela
+                headers = ["ID", "REV", "NOME", "IDADE", "CIDADE"]
+                return print(tabulate(usuarios, headers=headers, tablefmt="simple"))
+    else:
+        print('\n>>> Sem conexão com o servidor. <<<')             
+        
+        
+    
     
     
