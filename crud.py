@@ -183,8 +183,31 @@ def atualizar ():
     else:
         print('\n>>> Não foi possível conctar ao servidor. <<<')                
                 
-                
+# Funcionalidade - excluir registro
+def excluir ():
+    
+    # Atribui-se a conexão
+    db = con()
+    
+    # Se existir conexão, então...
+    if db:
+        # Recebe ID pelo usuário
+        doc_id = input('Informe o ID do usuário: ')
+        # chama função de consulta ao usuário
+        cons_doc(doc_id)
+        doc = db.get(doc_id)
         
+        # Tratamento do registro
+        try:
+            if input('>>> Deseja excuir esse registro: (s- sim / n- não)?: ').lower() != 's':
+                print('\n>>> Exclusão cancelada. <<<')                
+            else:
+                db.delete(doc)
+                print('\n>>> Registro excluído com sucesso! <<<')
+        except couchdb.http.ResourceNotFound as e:
+            print(f'\n>>> Erro ao deletar o arquivo: {e} <<<')
+    else:
+        print('\n>>> Não foi possível conectar ao servidor <<<')     
         
     
         
