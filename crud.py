@@ -116,7 +116,75 @@ def inserir ():
             print('\n>>> Usuário não registrado. <<<')
     else:
         print('\n>>> Não foi possível conectar ao servidor. <<<')
+
+# Funcionalidade - consulta unitária
+def cons_doc (doc_id):
+    
+    # Recebe como parâmetro o id fornecido pelo usuário (doc_id)
+    # Atribui-se a conexão
+    db = con()
+    
+    # Atribui-se a variável o id
+    doc = db.get(doc_id)
+    
+    # Conferindo a existência do id no banco
+    if doc:
+        row_doc = [[
+            doc.get('_id'),
+            doc.get('_rev'),
+            doc.get('nome'),
+            doc.get('idade'),
+            doc.get('cidade')
+        ]]
+        # Cria-se um Lista com cabeçalho dos campos
+        headers = ['ID', 'VER', 'NOME', 'IDADE', 'CIDADE']
+        print(tabulate(row_doc, headers=headers, tablefmt='simple'))
+    else:
+        print('\n>>> Falha ao visulizar o registro <<<')        
                             
+# Funcionalidade - Atualização de registros                            
+def atualizar ():
+    
+    # Atribui-se a conexão
+    db = con()
+    
+    # Se existir conexão, então...
+    if db:
+        doc_id = input('Informe o ID do usuário: ')
+        # chama função de consulta ao usuário
+        cons_doc(doc_id)
+        doc = db.get(doc_id)
+        
+        # Tratamento do registro
+        try:
+            if input('>>> Atualizar esse registro (s- sim / n- não)?: ').lower() != 's':
+                print('\n>>> Atualização cancelada. <<<')                
+            else:
+                # Recebe novo nome oou mantém o existente
+                up_nome = input('Atualizar nome: ') or doc['nome']
+                
+                # Recebe nova idade ou mantém a idade existente
+                t_idade = input('Atualizar idade: ')
+                up_idade = int(t_idade) if t_idade else doc['idade']
+                
+                # Recebe nova cidade ou mantém a cidade existente
+                up_cidade = input('Atualizar cidade: ') or doc['cidade']
+            
+                # Atribuindo a chave
+                doc['nome'] = up_nome
+                doc['idade'] = up_idade
+                doc['cidade'] = up_cidade
+                
+                # Atualizando no banco
+                db[doc_id] = doc
+                print(f'\n>>> O usuário ({doc[doc_id]}) - {up_nome} foi atualizado com sucesso. <<<')
+        except couchdb.http.ResourceNotFound as e:
+            print(f'Registro não encontrado. {e}')
+    else:
+        print('\n>>> Não foi possível conctar ao servidor. <<<')                
+                
+                
+        
         
     
         
