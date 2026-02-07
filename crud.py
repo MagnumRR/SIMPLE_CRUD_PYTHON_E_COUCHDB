@@ -90,6 +90,35 @@ def listar ():
                 return print(tabulate(usuarios, headers=headers, tablefmt="simple"))
     else:
         print('\n>>> Sem conexão com o servidor. <<<')             
+
+# Funcionalidade - inserção de registros
+def inserir ():
+    
+    # Atribui-se a conexão
+    db = con()
+    
+    # Se existir conexão, então...
+    if db:
+        nome = input('Nome do usuário: ')
+        idade = int(input('Idade: '))
+        cidade = input('Cidade: ')
+
+        # Cria-se uma lista com as entradas
+        usuario = {'nome':nome, 'idade':idade, 'cidade':cidade}
+        
+        # Atribui-se ao banco a nova lista de registro
+        us_db = db.save(usuario)
+        
+        # Conferência ao salvar
+        if us_db:
+            print(f'\n>>> O usuário [{nome}] foi registrado com sucesso! <<<')
+        else:
+            print('\n>>> Usuário não registrado. <<<')
+    else:
+        print('\n>>> Não foi possível conectar ao servidor. <<<')
+                            
+        
+    
         
         
     
